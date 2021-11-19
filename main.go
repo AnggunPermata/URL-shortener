@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/anggunpermata/url-shortener/config"
+	"github.com/anggunpermata/url-shortener/helper/render"
 	"github.com/anggunpermata/url-shortener/helper/storage"
 	"github.com/anggunpermata/url-shortener/server/route"
 	"github.com/labstack/echo"
@@ -13,6 +14,7 @@ func main(){
 	storage.InitializeStore()
 	e := echo.New()
 
+	e.Renderer = render.NewRenderer("./template/html/*.html", true)
 	//register routes
 	route.InitRoute(e)
 	Port := fmt.Sprintf(":%d", config.PORT)

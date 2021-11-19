@@ -9,9 +9,9 @@ import (
 )
 
 func Homepage(c echo.Context)error{
-	return c.JSON(200, map[string]interface{}{
-		"message": "welcome to homepage !!",
-	})
+	type M map[string]interface{}
+	data := M{"message": "welcome to homepage !!"}
+	return c.Render(http.StatusOK, "home.page.html", data)
 }
 
 func UrlShortener(c echo.Context) error {
