@@ -48,4 +48,5 @@ func AccessURL(c echo.Context) error {
 		})
 	}
 	c.Redirect(302, initialURL)
+	return c.JSON(http.StatusOK, "success")
 }
