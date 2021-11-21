@@ -14,6 +14,32 @@ func Homepage(c echo.Context)error{
 	return c.Render(http.StatusOK, "home.page.html", data)
 }
 
+func RouteSubmitPost(c echo.Context) error{
+	if c.Request().Method == "POST" {
+		originalUrl := c.FormValue("original_url")
+		shortenedUrl := c.FormValue("shortened_url")
+		if _, err := storage.RetrieveInitialUrl(shortenedUrl); err != nil {
+			if err2 := storage.SaveUrlMapping(shortenedUrl, originalUrl, "guest"); err2 != nil{
+				log.Println(err2)
+				return c.JSON(http.StatusBadRequest, err2)
+			}
+
+			var data = map[string]interface{}{
+				"message": "short url created",
+				"created": true,
+				"original_url": originalUrl,
+				"short_url": "http://localhost:8080/" + shortenedUrl,
+			}
+			return c.Render(http.StatusOK, "urlshortener.page.html", data)
+		}
+
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "url already exists",
+		})
+	}
+	return c.Render(http.StatusOK, "urlshortener.page.html", nil)
+}
+
 func UrlShortener(c echo.Context) error {
 	req := new(models.UrlShortener_Payload)
 	if err := c.Bind(&req); err != nil{

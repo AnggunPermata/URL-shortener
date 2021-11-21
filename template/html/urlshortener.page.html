@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <form method="post" action="/url_shortener">
+        <label>Original URL:</label>
+        <input type="text" placeholder="Type Original URL" name="original_url" required />
+        <br />
+
+        <label>Shortened URL:</label>
+        <input type="text" placeholder="Type Shortened URL" name="shortened_url" required />
+        <br />
+
+        <button type="submit">Submit</button>
+
+        <div>
+            <br />
+            <h3>{{.message}}</h3>
+            <br />
+            {{ if .created }}
+            original url: {{.original_url}}
+            <br />
+            short url: {{.short_url}}
+            {{ end }}
+        </div>
+    </form>
+</body>
+</html>
