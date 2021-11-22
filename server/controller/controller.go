@@ -28,7 +28,7 @@ func RouteSubmitPost(c echo.Context) error{
 				"message": "short url created",
 				"created": true,
 				"original_url": originalUrl,
-				"short_url": "http://localhost:8080/" + shortenedUrl,
+				"short_url": "https://anggunpermata-us.herokuapp.com/" + shortenedUrl,
 			}
 			return c.Render(http.StatusOK, "urlshortener.page.html", data)
 		}

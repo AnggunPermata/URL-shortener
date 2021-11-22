@@ -13,6 +13,7 @@ func main(){
 	config.InitPort()
 	storage.InitializeStore()
 	e := echo.New()
+	fmt.Println(config.LoadEnv("REDIS_URL \n"))
 
 	e.Renderer = render.NewRenderer("./template/html/*.html", true)
 	//register routes

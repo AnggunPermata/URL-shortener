@@ -3,7 +3,8 @@ package storage
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis/v8"
+	"github.com/anggunpermata/url-shortener/config"
+	"github.com/go-redis/redis"
 	"time"
 )
 
@@ -20,13 +21,16 @@ var (
 const CacheDuration = 6 * time.Hour
 
 func InitializeStore() *StorageService {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		Password: "",
-		DB: 0,
-	})
+	opt, err := redis.ParseURL(config.LoadEnv("REDIS_URL"))
+	if err != nil {
+		fmt.Println(err)
+		panic("Failed to connect redis")
+	}
 
-	pong, err := redisClient.Ping(ctx).Result()
+	redisClient := redis.NewClient(opt)
+
+	fmt.Println(config.LoadEnv("REDIS_URL \n"))
+	pong, err := redisClient.Ping().Result()
 	if err != nil {
 		panic(fmt.Sprintf("Error initializing redis: %v", err))
 	}
@@ -37,7 +41,7 @@ func InitializeStore() *StorageService {
 }
 
 func SaveUrlMapping(shortUrl string, originalUrl string, userId string)error{
-	if err := storageService.redisClient.Set(ctx, shortUrl, originalUrl, CacheDuration).Err(); err != nil{
+	if err := storageService.redisClient.Set(shortUrl, originalUrl, CacheDuration).Err(); err != nil{
 		return err
 		//panic(fmt.Sprintf("failed saving key url | error : %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, originalUrl))
 	}
@@ -45,7 +49,7 @@ func SaveUrlMapping(shortUrl string, originalUrl string, userId string)error{
 }
 
 func RetrieveInitialUrl(shortUrl string) (string, error){
-	result, err := storageService.redisClient.Get(ctx, shortUrl).Result()
+	result, err := storageService.redisClient.Get(shortUrl).Result()
 	if err != nil {
 		return result, err
 		//panic(fmt.Sprintf("Failed RetrieveInitialUrl url | Error: %v - shortUrl: %s\n", err, shortUrl))
