@@ -25,7 +25,7 @@ func RouteSubmitPost(c echo.Context) error{
 			}
 
 			var data = map[string]interface{}{
-				"message": "short url created",
+				"message": "Short URL Created",
 				"created": true,
 				"original_url": originalUrl,
 				"short_url": "https://anggunpermata-us.herokuapp.com/" + shortenedUrl,
